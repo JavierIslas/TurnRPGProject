@@ -30,17 +30,18 @@ public:
 
 	bool Tick(float DeltaSeconds);
 
-	void CheckForGameOverCondition(int& DeadCount);
+	void CheckForGameOverCondition();
 
 	void CountDeathsForEndCombatPhaseChange();
 
-	void CheckForVictoryCondition(int& DeadCount);
+	void CheckForVictoryCondition();
 
 protected:
 	URPGPlayerChar* CurrentTickTarget;
 	int TickTargetIndex;
 	bool WaitingForCharacter;
 	void SetPhase(Phases NewPhase);
+	bool GetnextAliveCharacter();
 	void SelectNextCharacter();
 
 private: 

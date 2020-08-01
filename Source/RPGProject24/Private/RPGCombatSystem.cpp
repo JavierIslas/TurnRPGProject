@@ -29,7 +29,6 @@ RPGCombatSystem::RPGCombatSystem(TArray<URPGPlayerChar*> PlayerParty, TArray<URP
 
 void RPGCombatSystem::FreeEnemiesMemory()
 {
-	//Free Enemies Memory
 	for (int i = 0; i < EnemyParty.Num(); ++i)
 	{
 		EnemyParty[i] = nullptr;
@@ -58,8 +57,8 @@ void RPGCombatSystem::TargetStartDecision()
 
 void RPGCombatSystem::CheckForDecisionFinish(float DeltaSeconds)
 {
-	bool DecisionMade = CurrentTickTarget->MakeDecision(DeltaSeconds);
-	if (DecisionMade)
+	
+	if (bool DecisionMade = CurrentTickTarget->MakeDecision(DeltaSeconds))
 	{
 		SelectNextCharacter();
 		//No more Characters, switch to P_Action
@@ -114,7 +113,7 @@ int RPGCombatSystem::CountDeathsOnParty(TArray<URPGPlayerChar*> Party)
 	return DeadCount;
 }
 
-void RPGCombatSystem::CheckForGameOverCondition(int& DeadCount)
+void RPGCombatSystem::CheckForGameOverCondition()
 {
 	if (CountDeathsOnParty(PlayerParty) == PlayerParty.Num())
 	{
@@ -122,7 +121,7 @@ void RPGCombatSystem::CheckForGameOverCondition(int& DeadCount)
 	}
 }
 
-void RPGCombatSystem::CheckForVictoryCondition(int& DeadCount)
+void RPGCombatSystem::CheckForVictoryCondition()
 {
 	if (CountDeathsOnParty(EnemyParty) == EnemyParty.Num())
 	{
@@ -132,18 +131,14 @@ void RPGCombatSystem::CheckForVictoryCondition(int& DeadCount)
 
 void RPGCombatSystem::CountDeathsForEndCombatPhaseChange()
 {
-	int DeadCount = 0;
-	CheckForGameOverCondition(DeadCount);
+	CheckForGameOverCondition();
 
-	DeadCount = 0;
-	CheckForVictoryCondition(DeadCount);
+	CheckForVictoryCondition();
 }
 
 void RPGCombatSystem::CheckForExecuteFinish(float DeltaSeconds)
 {
-	bool ActionFinished = CurrentTickTarget->ExecuteAction(DeltaSeconds);
-	//when Action executed
-	if (ActionFinished)
+	if (bool ActionFinished = CurrentTickTarget->ExecuteAction(DeltaSeconds))
 	{
 		SelectNextCharacter();
 		//No more Characters, go to P_Decision
@@ -180,10 +175,8 @@ void RPGCombatSystem::SetPhase(Phases NewPhase)
 	}
 }
 
-void RPGCombatSystem::SelectNextCharacter()
+bool RPGCombatSystem::GetnextAliveCharacter()
 {
-	WaitingForCharacter = false;
-
 	for (int i = TickTargetIndex; i < CombatOrder.Num(); ++i)
 	{
 		URPGPlayerChar* Character = CombatOrder[i];
@@ -191,9 +184,17 @@ void RPGCombatSystem::SelectNextCharacter()
 		{
 			TickTargetIndex = i + 1;
 			CurrentTickTarget = Character;
-			return;
+			return true;
 		}
 	}
+	return false;
+}
+
+void RPGCombatSystem::SelectNextCharacter()
+{
+	WaitingForCharacter = false;
+
+	if (GetnextAliveCharacter()) return;
 
 	TickTargetIndex = -1;
 	CurrentTickTarget = nullptr;
