@@ -4,6 +4,7 @@
 #include "UObject/UObjectGlobals.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
+#include "CombatUIWidget.h"
 #include "Public/RPGCharacter.h"
 #include "Public/RPGGameInstance.h"
 #include "Public/RPGCombatSystem.h"
@@ -25,8 +26,8 @@ void ARPGProject24GameModeBase::Tick(float DeltaTime)
 {
 	if (CSInstance)
 	{
-		bool CombatOver = CSInstance->Tick(DeltaTime);
-		if (CombatOver)
+		
+		if (bool CombatOver = CSInstance->Tick(DeltaTime))
 		{
 			if (CSInstance->CombatPhase == Phases::P_GameOver)
 			{
@@ -38,8 +39,13 @@ void ARPGProject24GameModeBase::Tick(float DeltaTime)
 					UE_LOG(LogTemp, Log, TEXT("Player wins Combat"));
 			}
 
+			UGameplayStatics::GetPlayerController(GetWorld(), 0)->bShowMouseCursor = false;
+
 			//returns control to the player controller
 			UGameplayStatics::GetPlayerController(GetWorld(), 0)->SetActorTickEnabled(true);
+
+			CombatUIInstance->RemoveFromViewport();
+			CombatUIInstance = nullptr;
 			delete(CSInstance);
 			CSInstance = nullptr;
 			EnemyParty.Empty();
@@ -77,4 +83,18 @@ void ARPGProject24GameModeBase::TestCombat()
 	URPGGameInstance* GI = Cast<URPGGameInstance>(GetGameInstance());
 	CSInstance = new RPGCombatSystem(GI->PartyMember, EnemyParty);
 	UE_LOG(LogTemp, Log, TEXT("Combat Started"));
+
+	//Instance of the UI widget
+	CombatUIInstance = CreateWidget<UCombatUIWidget>(GetGameInstance(), CombatUIClass);
+	CombatUIInstance->AddToViewport();
+
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->bShowMouseCursor = true;
+
+	for (URPGPlayerChar* var : GI->PartyMember) {
+		CombatUIInstance->AddPlayerCharacterPanel(var);
+	}
+
+	for (URPGPlayerChar* var : EnemyParty) {
+		CombatUIInstance->AddEnemyCharacterPanel(var);
+	}
 }

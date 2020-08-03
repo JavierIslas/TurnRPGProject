@@ -12,7 +12,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class RPGPROJECT24_API URPGPlayerChar : public UObject
 {
 	GENERATED_BODY()

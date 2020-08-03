@@ -22,6 +22,12 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TArray<class URPGPlayerChar*> EnemyParty;
 
+	UPROPERTY()
+	class UCombatUIWidget* CombatUIInstance;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<class UCombatUIWidget> CombatUIClass;
+
 protected:
 	virtual void BeginPlay() override;
 
