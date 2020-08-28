@@ -39,6 +39,11 @@ void ARPGProject24GameModeBase::Tick(float DeltaTime)
 					UE_LOG(LogTemp, Log, TEXT("Player wins Combat"));
 			}
 
+			//Destroy the DecisionMaker from player's Characters
+			for (URPGPlayerChar* var : CSInstance->PlayerParty) {
+				var->DecisionMaker = nullptr;
+			}
+
 			UGameplayStatics::GetPlayerController(GetWorld(), 0)->bShowMouseCursor = false;
 
 			//returns control to the player controller
@@ -92,6 +97,7 @@ void ARPGProject24GameModeBase::TestCombat()
 
 	for (URPGPlayerChar* var : GI->PartyMember) {
 		CombatUIInstance->AddPlayerCharacterPanel(var);
+		var->DecisionMaker = CombatUIInstance;
 	}
 
 	for (URPGPlayerChar* var : EnemyParty) {

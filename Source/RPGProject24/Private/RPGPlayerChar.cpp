@@ -29,8 +29,6 @@ URPGPlayerChar * URPGPlayerChar::CreatePlayerCharacter(FRPGCharacterInfo * CharI
 		Character->CurrentATK = Character->ClassInfo->StartATK;
 		Character->CurrentDEF = Character->ClassInfo->StartDEF;
 		Character->CurrentLuck = Character->ClassInfo->StartLuck;
-
-		Character->DecisionMaker = new TestDecision();
 	}
 	Character->bIsPlayer = true;
 	return Character;
@@ -60,6 +58,7 @@ URPGPlayerChar* URPGPlayerChar::CreateGameCharacter(FRPGEnemyInfo* EnemyInfo, UO
 void URPGPlayerChar::BeginDestroy()
 {
 	Super::BeginDestroy();
+	if (bIsPlayer) return;
 	delete(DecisionMaker);
 }
 

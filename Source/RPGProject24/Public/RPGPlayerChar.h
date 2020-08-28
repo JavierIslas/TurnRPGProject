@@ -46,7 +46,7 @@ public:
 
 	bool bIsPlayer = false;
 
-	class RPGCombatSystem* CSInstance = NULL;
+	class RPGCombatSystem* CSInstance = nullptr;
 
 	static URPGPlayerChar* CreatePlayerCharacter(FRPGCharacterInfo* CharInfo, UObject* outer);
 
