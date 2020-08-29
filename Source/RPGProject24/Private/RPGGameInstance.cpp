@@ -30,3 +30,9 @@ void URPGGameInstance::Init()
 	PartyMember.Add(URPGPlayerChar::CreatePlayerCharacter(Row, this));
 
 }
+
+void URPGGameInstance::PrepareReset()
+{
+	bIsInitialized = false;
+	PartyMember.Empty();
+}

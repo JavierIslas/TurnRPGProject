@@ -24,4 +24,6 @@ public:
 	TArray<URPGPlayerChar*> PartyMember;
 
 	void Init();
+
+	void PrepareReset();
 };

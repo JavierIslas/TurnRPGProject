@@ -32,6 +32,11 @@ void ARPGProject24GameModeBase::Tick(float DeltaTime)
 			if (CSInstance->CombatPhase == Phases::P_GameOver)
 			{
 				UE_LOG(LogTemp, Log, TEXT("Player loses combat, Game Over"));
+
+				Cast<URPGGameInstance>(GetGameInstance())->PrepareReset();
+
+				UUserWidget* GameOverUIInstance = CreateWidget<UUserWidget>(GetGameInstance(), GameOverUIClass);
+				GameOverUIInstance->AddToViewport();
 			}
 			else
 			{

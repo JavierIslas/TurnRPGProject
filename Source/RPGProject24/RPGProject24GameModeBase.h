@@ -33,6 +33,9 @@ protected:
 
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<class UUserWidget> GameOverUIClass;
+
 private:
 	UFUNCTION(exec)
 	void TestCombat();
